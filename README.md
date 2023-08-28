@@ -3,9 +3,12 @@
 Usage:
 
 `aiken build`
+
 `deno run --allow-read --allow-write --allow-net ./scripts/${SCRIPT_OF_CHOICE}.ts`
 
 Available scripts are `guess`, `owner`, `count`, and `secure_count`.
+
+---
 
 Write validators in the `validators` folder, and supporting functions in the `lib` folder using `.ak` as a file extension.
 
