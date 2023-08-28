@@ -51,6 +51,7 @@ validator {
 
     let count_script_address = input.output.address
 
+    // For simplicity's sake, assume there is only one output to the script address.
     expect Some(output) = transaction.outputs
       |> list.filter(fn (output) {
         output.address == count_script_address
@@ -98,12 +99,10 @@ validator(count_script_hash: ByteArray) {
 
     let authorizing_token_name = "COUNT"
 
-    // to simplify, disallow count updates in this transaction
     expect no_count_data_in_inputs(inputs, count_script_hash)
 
     let new_count_outputs = find_script_outputs(outputs, count_script_hash)
 
-    // all new count datums are valid and initialized to 0
     expect no_invalid_count_data(
       transaction,
       new_count_outputs, 
@@ -111,7 +110,7 @@ validator(count_script_hash: ByteArray) {
       policy_id
     )
 
-    let num_minted = mint
+    let num_minted = mint 
         |> value.from_minted_value
         |> quantity_of(policy_id, authorizing_token_name)
 
@@ -147,11 +146,9 @@ fn no_count_data_in_inputs(
   inputs: List<Input>, 
   count_script_hash: ScriptHash
 ) -> Bool {
-  let num_script_inputs = list.map(inputs, fn (input){
+  list.map(inputs, fn (input){
       input.output
   })
   |> find_script_outputs(count_script_hash)
-  |> list.length()
-
-  num_script_inputs == 0
+  |> list.is_empty()
 }
